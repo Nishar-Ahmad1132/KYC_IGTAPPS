@@ -74,8 +74,8 @@ kyc_system/
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/Nishar-Ahmad1132/IGTAPPS-KYC_SYSTEM.git
-cd IGTAPPS-KYC_SYSTEM
+git clone https://github.com/Nishar-Ahmad1132/KYC_IGTAPPS.git
+cd KYC_IGTAPPS
 ```
 
 ### 2️⃣ Backend Setup

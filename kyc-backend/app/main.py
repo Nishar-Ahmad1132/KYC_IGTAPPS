@@ -31,4 +31,4 @@ Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def home():
-    return {"msg": "KYC API Running on Port 8080 "}
+    return {"msg": "KYC API Running on Port 9090 "}
