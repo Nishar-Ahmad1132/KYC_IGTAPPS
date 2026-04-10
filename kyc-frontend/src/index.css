@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: oklch(0.6 0.16 250);
+  --color-brand-glow: oklch(0.6 0.16 250 / 0.15);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", var(--font-sans);
+}
+
+:root {
+  --bg-deep: 222 47% 7%;
+  --bg-card: 222 47% 11%;
+  --accent: 217 91% 60%;
+  --text-primary: 210 40% 98%;
+  --text-muted: 215 20% 65%;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: hsl(var(--bg-deep));
+  color: hsl(var(--text-primary));
+  font-family: var(--font-sans);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+}
+
+/* --- Premium Utilities --- */
+
+.glass-card {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl;
+}
+
+.bg-mesh {
+  background: 
+    radial-gradient(circle at 10% 20%, hsla(var(--accent), 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, hsla(var(--accent), 0.08) 0%, transparent 40%),
+    hsl(var(--bg-deep));
+}
+
+.btn-glow {
+  box-shadow: 0 0 20px hsla(var(--accent), 0.3);
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-700/50 rounded-full hover:bg-slate-600;
+}
