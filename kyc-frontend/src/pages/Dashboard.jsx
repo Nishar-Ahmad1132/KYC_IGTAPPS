@@ -20,6 +20,7 @@ import { motion } from "framer-motion";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import CertificatePreview from "../components/common/CertificatePreview";
 
 export default function Dashboard() {
   const user = useKycStore((s) => s.user);
@@ -28,6 +29,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -35,7 +37,16 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const userRes = await api.get(`/users/${user.id}`);
-        setProfile(userRes.data);
+        
+        let ocrData = {};
+        try {
+          const ocrRes = await api.get(`/kyc/ocr/${user.id}`);
+          ocrData = ocrRes.data;
+        } catch (ocrErr) {
+          console.error("No OCR data found or error fetching it:", ocrErr);
+        }
+
+        setProfile({ ...userRes.data, aadhaar_number: ocrData.aadhaar_number });
 
         const statusRes = await api.get(`/kyc/status/${user.id}`);
         setStatus(statusRes.data);
@@ -187,16 +198,19 @@ export default function Dashboard() {
                <div className="w-full pt-2 space-y-3">
                  {kycStatus === "VERIFIED" ? (
                     <>
-                      <Button className="w-full h-13">
-                        Explore Features <ArrowRight size={18} className="ml-2" />
-                      </Button>
-                      <Button 
+                       <Button 
+                         onClick={() => setShowCertificate(true)}
+                         className="w-full h-13"
+                       >
+                         View Certificate <ArrowRight size={18} className="ml-2" />
+                       </Button>
+                       <Button 
                         onClick={downloadCertificate}
                         variant="secondary" 
                         className="w-full h-10 bg-green-500/10 border-green-500/10 text-green-400 hover:bg-green-500/20"
                       >
                         <FileText size={16} className="mr-2" />
-                        Download Certificate
+                        Download PDF
                       </Button>
                     </>
                  ) : (
@@ -208,6 +222,13 @@ export default function Dashboard() {
                </div>
             </div>
           </Card>
+
+          <CertificatePreview 
+            isOpen={showCertificate} 
+            onClose={() => setShowCertificate(false)} 
+            userData={profile} 
+            onDownload={downloadCertificate}
+          />
 
           <Card className="bg-white/5 border-white/10">
             <h5 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Security Note</h5>

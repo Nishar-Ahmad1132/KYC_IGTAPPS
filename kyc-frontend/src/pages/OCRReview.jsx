@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import ProgressBar from "../components/ui/ProgressBar";
+import KycStepper from "../components/common/KycStepper";
 
 export default function OCRReview() {
   const ocrData = useKycStore((s) => s.ocrData);
@@ -35,7 +36,7 @@ export default function OCRReview() {
         </p>
         
         <div className="pt-2">
-          <ProgressBar current={3} total={5} label="Data Validation" />
+          <KycStepper currentStepId="OCR" />
         </div>
       </div>
 

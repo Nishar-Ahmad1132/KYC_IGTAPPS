@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import ProgressBar from "../components/ui/ProgressBar";
+import KycStepper from "../components/common/KycStepper";
 
 export default function AadhaarUpload() {
   const [front, setFront] = useState(null);
@@ -59,7 +59,7 @@ export default function AadhaarUpload() {
         </p>
         
         <div className="pt-2">
-          <ProgressBar current={2} total={5} label="Document Upload" />
+          <KycStepper currentStepId="UPLOAD" />
         </div>
       </div>
 
@@ -72,12 +72,14 @@ export default function AadhaarUpload() {
               file={front} 
               setFile={setFront} 
               description="Front side with photo"
+              isScanning={loading}
             />
             <UploadBox 
               label="Aadhaar Back" 
               file={back} 
               setFile={setBack} 
               description="Back side with address"
+              isScanning={loading}
             />
           </div>
 
@@ -138,7 +140,7 @@ export default function AadhaarUpload() {
   );
 }
 
-function UploadBox({ label, file, setFile, description }) {
+function UploadBox({ label, file, setFile, description, isScanning }) {
   return (
     <label className="block cursor-pointer group">
       <div className={`
@@ -175,11 +177,19 @@ function UploadBox({ label, file, setFile, description }) {
               className="mt-6 relative"
             >
               <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-50" />
-              <img
-                src={URL.createObjectURL(file)}
-                alt="preview"
-                className="relative mx-auto max-h-40 rounded-xl border border-white/10 shadow-lg object-contain"
-              />
+              <div className="relative overflow-hidden rounded-xl border border-white/10 shadow-lg group">
+                {isScanning && (
+                  <>
+                     <div className="absolute inset-0 bg-blue-500/10 z-10 animate-pulse pointer-events-none" />
+                     <div className="scan-line" />
+                  </>
+                )}
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="preview"
+                  className="mx-auto max-h-40 object-contain w-full bg-slate-950/40"
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

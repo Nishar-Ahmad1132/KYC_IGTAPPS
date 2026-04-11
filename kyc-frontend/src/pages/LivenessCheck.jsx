@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import ProgressBar from "../components/ui/ProgressBar";
+import KycStepper from "../components/common/KycStepper";
 
 const steps = [
   { action: "blink", text: "Please Blink Your Eyes", icon: Eye },
@@ -103,7 +103,7 @@ export default function LivenessCheck() {
         </p>
         
         <div className="pt-2">
-          <ProgressBar current={stepIndex + 1} total={steps.length} label="Anti-Fraud Check" />
+          <KycStepper currentStepId="LIVENESS" />
         </div>
       </div>
 

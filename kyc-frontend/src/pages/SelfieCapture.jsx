@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import ProgressBar from "../components/ui/ProgressBar";
+import KycStepper from "../components/common/KycStepper";
 
 export default function SelfieCapture() {
   const webcamRef = useRef(null);
@@ -61,7 +61,7 @@ export default function SelfieCapture() {
         </p>
         
         <div className="pt-2">
-          <ProgressBar current={4} total={5} label="Biometric Capture" />
+          <KycStepper currentStepId="LIVENESS" />
         </div>
       </div>
 

@@ -10,7 +10,6 @@ import { Mail, Phone, User, CreditCard, ArrowRight, Lock, Eye, EyeOff } from "lu
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import InputField from "../components/ui/InputField";
-import ProgressBar from "../components/ui/ProgressBar";
 
 const registerSchema = z.object({
   first_name: z.string().min(2, "First name must be at least 2 characters"),

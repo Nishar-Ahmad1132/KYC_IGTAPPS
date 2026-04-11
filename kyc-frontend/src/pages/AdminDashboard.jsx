@@ -6,12 +6,17 @@ import {
   ShieldX, 
   ExternalLink, 
   User, 
+  Users,
   FileText, 
   Camera, 
   AlertCircle,
   Check,
   X,
-  MessageSquare
+  MessageSquare,
+  Activity,
+  Zap,
+  Clock,
+  ArrowUpRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -140,12 +145,41 @@ export default function AdminDashboard() {
           <p className="text-slate-400 text-sm">Managing {requests.length} total system interactions.</p>
         </div>
         
-        <div className="flex items-center gap-4 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl">
-          <div className="flex items-center gap-2">
-             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-             <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Active Requests: {attentionRequired.length}</span>
-          </div>
-        </div>
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard 
+          icon={Users} 
+          label="Total Users" 
+          value={requests.length} 
+          trend="+12%" 
+          color="text-blue-500"
+          bg="bg-blue-500/10"
+        />
+        <StatCard 
+          icon={ShieldCheck} 
+          label="Verified" 
+          value={aiSuccess.length} 
+          trend="+5%" 
+          color="text-green-500"
+          bg="bg-green-500/10"
+        />
+        <StatCard 
+          icon={AlertCircle} 
+          label="Pending Review" 
+          value={attentionRequired.length} 
+          trend="-2%" 
+          color="text-amber-500"
+          bg="bg-amber-500/10"
+        />
+        <StatCard 
+          icon={Zap} 
+          label="AI Efficiency" 
+          value={`${Math.round((aiSuccess.length / (requests.length || 1)) * 100)}%`} 
+          trend="Optimal" 
+          color="text-purple-500"
+          bg="bg-purple-500/10"
+        />
+      </div>
       </div>
 
       {/* Analytics Section */}
@@ -217,30 +251,52 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Requests List */}
-        <div className="lg:col-span-1 space-y-8 h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
-          
-          {/* Needs Attention Section */}
-          <div className="space-y-4">
-            <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
-              <AlertCircle size={14} /> Attention Required ({attentionRequired.length})
-            </h3>
-            {attentionRequired.length === 0 ? (
-              <p className="text-slate-600 text-xs italic ml-1">No pending issues.</p>
-            ) : (
-              attentionRequired.map(req => <UserItem key={req.user.id} req={req} />)
-            )}
-          </div>
+        <div className="lg:col-span-1 space-y-8">
+          <div className="h-[75vh] overflow-y-auto pr-2 custom-scrollbar space-y-8">
+            {/* Activity Feed [NEW] */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center justify-between">
+                <span className="flex items-center gap-2"><Activity size={14} /> System Activity</span>
+                <span className="text-[8px] bg-white/5 px-2 py-0.5 rounded text-slate-600">LIVE</span>
+              </h3>
+              <div className="space-y-3">
+                {requests.slice(0, 4).map((req, i) => (
+                   <ActivityItem 
+                    key={i}
+                    user={`${req.user.first_name}`}
+                    action={req.user.kyc_status === 'VERIFIED' ? 'Passed Auto-Check' : 'Started Verification'}
+                    time={`${i + 2}m ago`}
+                    status={req.user.kyc_status}
+                   />
+                ))}
+              </div>
+            </div>
 
-          {/* AI Verified Section */}
-          <div className="space-y-4 pt-4 border-t border-white/5">
-            <h3 className="text-[10px] font-bold text-green-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
-              <ShieldCheck size={14} /> AI Verified / Success ({aiSuccess.length})
-            </h3>
-            {aiSuccess.length === 0 ? (
-              <p className="text-slate-600 text-xs italic ml-1">No automated successes yet.</p>
-            ) : (
-              aiSuccess.map(req => <UserItem key={req.user.id} req={req} />)
-            )}
+            {/* Needs Attention Section */}
+            <div className="space-y-4 pt-4 border-t border-white/5">
+              <h3 className="text-[10px] font-bold text-amber-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                <AlertCircle size={14} /> Review Queue ({attentionRequired.length})
+              </h3>
+              {attentionRequired.length === 0 ? (
+                <div className="p-8 text-center bg-white/5 rounded-2xl border border-dashed border-white/5">
+                   <p className="text-slate-600 text-xs italic">Queue is clear.</p>
+                </div>
+              ) : (
+                attentionRequired.map(req => <UserItem key={req.user.id} req={req} />)
+              )}
+            </div>
+
+            {/* AI Verified Section */}
+            <div className="space-y-4 pt-4 border-t border-white/5">
+              <h3 className="text-[10px] font-bold text-green-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                <ShieldCheck size={14} /> Success Log ({aiSuccess.length})
+              </h3>
+              {aiSuccess.length === 0 ? (
+                <p className="text-slate-600 text-xs italic ml-1">No automated successes yet.</p>
+              ) : (
+                aiSuccess.map(req => <UserItem key={req.user.id} req={req} />)
+              )}
+            </div>
           </div>
         </div>
 
@@ -404,10 +460,46 @@ export default function AdminDashboard() {
   );
 }
 
+function StatCard({ icon: Icon, label, value, trend, color, bg }) {
+  return (
+    <Card className="p-5 flex items-center gap-5 border-white/5 bg-slate-900/40 group hover:border-blue-500/20 transition-all duration-300">
+      <div className={`p-3 rounded-2xl ${bg} ${color} group-hover:scale-110 transition-transform duration-300`}>
+        <Icon size={24} />
+      </div>
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{label}</p>
+          <span className={`text-[8px] font-bold ${trend.startsWith('+') ? 'text-green-500' : trend === 'Optimal' ? 'text-blue-400' : 'text-amber-500'}`}>
+            {trend}
+          </span>
+        </div>
+        <p className="text-2xl font-display font-bold text-white tracking-tight">{value}</p>
+      </div>
+    </Card>
+  );
+}
+
+function ActivityItem({ user, action, time, status }) {
+  return (
+    <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 group hover:bg-white/[0.05] transition-colors">
+      <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${status === 'VERIFIED' ? 'bg-green-500' : 'bg-blue-500 animate-pulse'}`} />
+      <div className="space-y-0.5">
+        <p className="text-[11px] text-white">
+          <span className="font-bold">{user}</span> {action}
+        </p>
+        <div className="flex items-center gap-2 text-[9px] text-slate-600 font-medium">
+          <Clock size={10} /> {time}
+        </div>
+      </div>
+      <ArrowUpRight size={12} className="ml-auto text-slate-700 group-hover:text-slate-400 transition-colors" />
+    </div>
+  );
+}
+
 function DetailRow({ label, value, isMono }) {
   return (
-    <div className="space-y-1">
-      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{label}</p>
+    <div className="space-y-1 group">
+      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-blue-500/70 transition-colors">{label}</p>
       <p className={`text-sm text-slate-100 ${isMono ? "font-mono" : "font-semibold"}`}>{value || 'N/A'}</p>
     </div>
   );
