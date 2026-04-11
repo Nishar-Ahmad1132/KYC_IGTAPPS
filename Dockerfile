@@ -15,8 +15,11 @@ COPY kyc-backend /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose port
-EXPOSE 10000
+# Create uploads directory and grant permissions (Crucial for Hugging Face)
+RUN mkdir -p /app/uploads && chmod -R 777 /app
+
+# Expose Hugging Face default port
+EXPOSE 7860
 
 # Start FastAPI server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "10000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
