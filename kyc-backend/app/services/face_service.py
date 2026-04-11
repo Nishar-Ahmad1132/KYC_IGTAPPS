@@ -10,7 +10,7 @@ from insightface.app import FaceAnalysis
 # ensure we use 'buffalo_l' (Large) if available, it gives higher scores than 'buffalo_s'
 # If you only have 'buffalo_s', this code still works but 'l' is better.
 face_app = FaceAnalysis(name='buffalo_l', providers=["CPUExecutionProvider"])
-face_app.prepare(ctx_id=0, det_thresh=0.3, det_size=(640, 640))
+face_app.prepare(ctx_id=-1, det_thresh=0.3, det_size=(640, 640))
 
 # -------------------------------------------
 # 2. Image Processing Variants
