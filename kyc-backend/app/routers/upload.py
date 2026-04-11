@@ -74,22 +74,29 @@ def upload_aadhaar(
     ocr_result = run_ocr(front_path)
 
     # Save OCR data
+    a_number = ocr_result.get("aadhaar_number")
+    a_full = ocr_result.get("aadhaar_full")
+    a_name = ocr_result.get("name")
+    a_dob = ocr_result.get("dob")
+    a_gender = ocr_result.get("gender")
+    a_conf = ocr_result.get("confidence", 0)
+
     existing = db.query(OCRData).filter(OCRData.user_id == user_id).first()
     if existing:
-        existing.aadhaar_number = ocr_result["aadhaar_number"]
-        existing.name = ocr_result["name"]
-        existing.dob = ocr_result["dob"]
-        existing.gender = ocr_result["gender"]
-        existing.confidence_score = ocr_result["confidence"]
+        existing.aadhaar_number = a_number
+        existing.name = a_name
+        existing.dob = a_dob
+        existing.gender = a_gender
+        existing.confidence_score = a_conf
     else:
         ocr_data = OCRData(
             user_id=user_id,
-            aadhaar_number=ocr_result["aadhaar_number"],
-            aadhaar_full=ocr_result["aadhaar_full"],
-            name=ocr_result["name"],
-            dob=ocr_result["dob"],
-            gender=ocr_result["gender"],
-            confidence_score=ocr_result["confidence"]
+            aadhaar_number=a_number,
+            aadhaar_full=a_full,
+            name=a_name,
+            dob=a_dob,
+            gender=a_gender,
+            confidence_score=a_conf
         )
         db.add(ocr_data)
 
