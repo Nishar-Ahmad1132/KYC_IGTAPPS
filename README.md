@@ -1,3 +1,12 @@
+---
+title: KYC System Backend API
+emoji: 🔐
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+---
+
 # 🔐 AI-Powered KYC Verification System (Binance-Grade)
 
 A high-performance, full-stack **End-to-End Online KYC System** built using **FastAPI, React, and Advanced Computer Vision**. This system automates identity verification with military-grade precision using **OCR, Face Matching, and Liveness Detection**.
