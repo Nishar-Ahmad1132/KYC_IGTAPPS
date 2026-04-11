@@ -70,27 +70,59 @@ def run_ocr_multi(images):
 # AADHAAR NUMBER EXTRACTION
 # -------------------------
 def extract_aadhaar_number_from_result(result):
-    if not result or not result[0]:
+    candidates = []
+
+    for line in result[0]:
+        text = line[1][0].upper()
+        y = line[0][0][1]
+        conf = line[1][1]
+
+        # 1. Clean the text (Fix O->0, B->8)
+        t = correct_digits(text)
+        
+        # 2. Extract ONLY the digits to count them
+        #    This removes spaces, 'VID', 'Mobile', etc.
+        digits_only = re.sub(r'\D', '', t) 
+
+        # ----------------------------------------
+        # ⛔ CRITICAL FIX: COUNT THE DIGITS
+        # ----------------------------------------
+        
+        # If the line has 16 digits (VID), ignore it completely.
+        if len(digits_only) >= 16:
+            continue
+            
+        # If the line has 10 digits (Mobile Number), ignore it.
+        if len(digits_only) == 10:
+            continue
+
+        # ----------------------------------------
+        # ✅ ACCEPT ONLY 12 DIGITS (AADHAAR)
+        # ----------------------------------------
+        if len(digits_only) == 12:
+            
+            # Double check: Is it physically formatted like "XXXX XXXX XXXX"?
+            # (Length of string roughly 14 chars)
+            # This ensures we don't pick up random 12-digit barcodes.
+            if len(t.replace(" ", "")) >= 12: 
+                candidates.append({
+                    "num": digits_only,
+                    "score": conf, 
+                    "y": y
+                })
+
+    # ----------------------------------------
+    # SELECT BEST CANDIDATE
+    # ----------------------------------------
+    if not candidates:
         return None
 
-    # Join all detected text blocks
-    full_text = " ".join([line[1][0] for line in result[0]]).upper()
-    
-    # Clean entirely to just alphanumeric characters
-    clean = re.sub(r'[^A-Z0-9]', '', full_text)
-    
-    # Correct common OCR mistakes on numbers (e.g., 'O' -> '0')
-    clean = correct_digits(clean)
-    
-    # Look for any continuous sequence of exactly 12 digits everywhere
-    matches = re.findall(r'(?<!\d)\d{12}(?!\d)', clean)
-    
-    if matches:
-        best = matches[0]
-        # Return formatted "1234 5678 9012"
-        return f"{best[:4]} {best[4:8]} {best[8:]}"
+    # Sort by Score (Confidence)
+    candidates.sort(key=lambda x: x["score"], reverse=True)
 
-    return None
+    best = candidates[0]["num"]
+    # Return formatted "1234 5678 9012"
+    return f"{best[:4]} {best[4:8]} {best[8:]}"
 
 
 # -------------------------
