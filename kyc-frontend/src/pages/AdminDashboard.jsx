@@ -342,33 +342,33 @@ export default function AdminDashboard() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 block">
                         <div className="space-y-2">
                           <p className="text-[10px] font-bold text-blue-500 text-center uppercase tracking-widest">Aadhaar Face</p>
-                          <div className="aspect-square rounded-2xl bg-slate-900 border border-white/5 overflow-hidden">
-                             {selectedRequest.documents?.aadhaar_face_path ? (
+                          <div className="aspect-square rounded-2xl bg-slate-900 border border-white/5 overflow-hidden relative">
+                             <div className="absolute inset-0 flex items-center justify-center text-slate-700">
+                               <User size={32} />
+                             </div>
+                             {selectedRequest.documents?.aadhaar_face_path && (
                                <img 
                                 src={`${import.meta.env.VITE_UPLOAD_URL}${selectedRequest.documents.aadhaar_face_path}`} 
                                 alt="Aadhaar Face" 
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover relative z-10"
+                                onError={(e) => e.target.style.display = 'none'}
                                />
-                             ) : (
-                               <div className="w-full h-full flex items-center justify-center text-slate-700">
-                                 <User size={32} />
-                               </div>
                              )}
                           </div>
                         </div>
                         <div className="space-y-2">
                           <p className="text-[10px] font-bold text-blue-500 text-center uppercase tracking-widest">Live Selfie</p>
-                          <div className="aspect-square rounded-2xl bg-slate-900 border border-white/5 overflow-hidden">
-                             {selectedRequest.documents?.selfie_path ? (
+                          <div className="aspect-square rounded-2xl bg-slate-900 border border-white/5 overflow-hidden relative">
+                             <div className="absolute inset-0 flex items-center justify-center text-slate-700">
+                               <Camera size={32} />
+                             </div>
+                             {selectedRequest.documents?.selfie_path && (
                                <img 
                                 src={`${import.meta.env.VITE_UPLOAD_URL}${selectedRequest.documents.selfie_path}`} 
                                 alt="Selfie" 
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover relative z-10"
+                                onError={(e) => e.target.style.display = 'none'}
                                />
-                             ) : (
-                               <div className="w-full h-full flex items-center justify-center text-slate-700">
-                                 <Camera size={32} />
-                               </div>
                              )}
                           </div>
                         </div>

@@ -44,7 +44,7 @@ def get_kyc_requests(
     
     results = []
     for user in users:
-        doc = db.query(KYCDocument).filter(KYCDocument.user_id == user.id).first()
+        doc = db.query(KYCDocument).filter(KYCDocument.user_id == user.id).order_by(KYCDocument.id.desc()).first()
         ocr = db.query(OCRData).filter(OCRData.user_id == user.id).first()
         face = db.query(FaceVerification).filter(FaceVerification.user_id == user.id).first()
         liveness = db.query(LivenessLogs).filter(LivenessLogs.user_id == user.id).first()
