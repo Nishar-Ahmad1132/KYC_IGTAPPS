@@ -27,29 +27,30 @@ export default function MainLayout({ children }) {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-4 sm:gap-8">
+          <nav className="flex items-center gap-3 sm:gap-8">
             {user && (
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3 sm:gap-6">
                 {/* Regular Dashboard Link */}
                 <Link 
                   to="/dashboard" 
-                  className={`text-xs font-bold uppercase tracking-widest transition-colors ${location.pathname === '/dashboard' ? 'text-blue-400' : 'text-slate-400 hover:text-white'}`}
+                  className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors ${location.pathname === '/dashboard' ? 'text-blue-400' : 'text-slate-400 hover:text-white'}`}
                 >
-                  Dashboard
+                  <LayoutDashboard size={14} className="sm:hidden" />
+                  <span className="hidden sm:inline">Dashboard</span>
                 </Link>
 
                 {/* Conditional Admin Panel Link */}
                 {user.is_admin && (
                   <Link 
                     to="/admin-dashboard" 
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all duration-300 ${
+                    className={`flex items-center gap-2 p-2 sm:px-3 sm:py-1.5 rounded-lg border transition-all duration-300 ${
                       location.pathname === '/admin-dashboard' 
                         ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' 
                         : 'border-white/5 text-slate-400 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <Settings size={14} />
-                    <span className="text-xs font-bold uppercase tracking-widest">Admin Panel</span>
+                    <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Admin Panel</span>
                   </Link>
                 )}
               </div>

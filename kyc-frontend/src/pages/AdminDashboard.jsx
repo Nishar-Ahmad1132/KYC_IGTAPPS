@@ -312,7 +312,7 @@ export default function AdminDashboard() {
                 className="space-y-8"
               >
                 <Card className="border-blue-500/20 shadow-blue-500/10">
-                  <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-6 mb-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-6 mb-6">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-500">
                         <User size={24} />
@@ -323,12 +323,12 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     
-                    <div className="flex gap-3">
-                      <Button onClick={() => setShowRejectModal(true)} variant="secondary" className="h-10 text-red-400 hover:bg-red-500/10 border-red-500/10 px-4">
+                    <div className="flex gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                      <Button onClick={() => setShowRejectModal(true)} variant="secondary" className="flex-1 sm:flex-none h-10 text-red-400 hover:bg-red-500/10 border-red-500/10 px-4">
                         <X size={16} className="mr-2" />
                         Reject
                       </Button>
-                      <Button onClick={() => handleApprove(selectedRequest.user.id)} className="h-10 px-6">
+                      <Button onClick={() => handleApprove(selectedRequest.user.id)} className="flex-1 sm:flex-none h-10 px-6">
                         <Check size={16} className="mr-2" />
                         Approve
                       </Button>
@@ -339,7 +339,7 @@ export default function AdminDashboard() {
                     {/* Visual Comparison */}
                     <div className="space-y-4">
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">Identity Comparison</p>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 block">
                         <div className="space-y-2">
                           <p className="text-[10px] font-bold text-blue-500 text-center uppercase tracking-widest">Aadhaar Face</p>
                           <div className="aspect-square rounded-2xl bg-slate-900 border border-white/5 overflow-hidden">
